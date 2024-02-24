@@ -1,162 +1,141 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="vehicleTrackingApp">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel</title>
+    <title>ADMIN PANEL </title>
+    <!-- Include Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.min.js"></script>
     <style>
-        /* Add your custom styles here */
+        /* Custom styles */
         body {
             background-color: #f5f5f5;
         }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding-top: 50px;
-            text-align: center;
+        .navbar-brand {
+            color: #337ab7;
         }
         .hero-section {
             background-color: #337ab7;
             color: #fff;
-            padding: 30px;
-            border-radius: 5px;
+            padding: 50px 0;
+            text-align: center;
             margin-bottom: 30px;
         }
-        .hero-section h2 {
-            margin-bottom: 20px;
+        .nav.navbar-nav {
+            margin-left: 50px;
         }
-        .btn-group {
-            margin-bottom: 20px;
+        .nav.navbar-nav > li > a {
+            color: #333;
+        }
+        .nav.navbar-nav > li > a:hover,
+        .nav.navbar-nav > li > a:focus {
+            background-color: #337ab7;
+            color: #fff;
+        }
+        .navbar-right {
+            margin-right: 50px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .tab-content {
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-top: 20px;
         }
     </style>
 </head>
-<body>
+<body ng-controller="MainController">
+<!-- Navbar with login and registration options -->
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">Admin Panel</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li><a ng-click="toggle('home')">HOME</a></li>
+            <li><a ng-click="toggle('create')">CREATE</a></li>
+            <li><a ng-click="toggle('read')">READ</a></li>
+            <li><a ng-click="toggle('update')">UPDATE</a></li>
+            <li><a ng-click="toggle('delete')">DELETE</a></li>
+        </ul>
 
-<div class="container">
-    <div class="hero-section">
-        <h2>Welcome to Admin Panel!</h2>
     </div>
+</nav>
 
-    <div class="btn-group">
-        <a href="#/index" class="btn btn-default">HOME</a>
-        <a href="#/create" class="btn btn-primary">CREATE</a>
-        <a href="#/read" class="btn btn-success">READ</a>
-        <a href="#/update" class="btn btn-warning">UPDATE</a>
-        <a href="#/delete" class="btn btn-info">DELETE</a>
-    </div>
-
-    <div ng-view></div>
+<!-- Hero section -->
+<div class="hero-section">
+    <h1>ADMIN PANEL</h1>
+    <p>Sample Text</p>
 </div>
 
+<!-- Other tabs for different features -->
+<div class="container tab-content" ng-show="showHome">
+    <!-- Content will be shown when the "HOME" tab is active -->
+    <!-- Add content for home tab here -->
+</div>
+
+<div class="container tab-content" ng-show="showCreate">
+    <h3>Create</h3>
+    <!-- Add content for create tab here -->
+</div>
+
+<div class="container tab-content" ng-show="showRead">
+    <h3>Read</h3>
+    <!-- Add content for read tab here -->
+</div>
+
+<div class="container tab-content" ng-show="showUpdate">
+    <h3>Update</h3>
+    <!-- Add content for update tab here -->
+</div>
+
+<div class="container tab-content" ng-show="showDelete">
+    <h3>Delete</h3>
+    <!-- Add content for delete tab here -->
+</div>
+
+<!-- Include AngularJS -->
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+<!-- Define your AngularJS application and controller -->
 <script>
-    var adminPanelApp = angular.module('adminPanelApp', ['ngRoute']);
+    var vehicleTrackingApp = angular.module('vehicleTrackingApp', []);
 
-    adminPanelApp.config(function ($routeProvider) {
-        $routeProvider
-            .when('/index', {
-                templateUrl: 'index.html'
-            })
-            .when('/create', {
-                templateUrl: 'create.html',
-                controller: 'CreateController'
-            })
-            .when('/read', {
-                templateUrl: 'read.html',
-                controller: 'ReadController'
-            })
-            .when('/update', {
-                templateUrl: 'update.html',
-                controller: 'UpdateController'
-            })
-            .when('/delete', {
-                templateUrl: 'delete.html',
-                controller: 'DeleteController'
-            })
-            .otherwise({
-                redirectTo: '/index' // Redirect to the default route '/index'
-            });
-    });
+    vehicleTrackingApp.controller('MainController', function ($scope) {
+        // Flags for controlling visibility of components
+        $scope.showLogin = false;
+        $scope.showHome = false; // Initially set to false to hide the "HOME" section
+        $scope.showCreate = false;
+        $scope.showRead = false;
+        $scope.showUpdate = false;
+        $scope.showDelete = false;
 
-    adminPanelApp.controller('CreateController', function ($scope) {
-        // Controller logic for create
-        $scope.showCreateEntry = false; // Initially set to false to hide the "CREATE ENTRY" section
+        // Function to toggle component visibility
+        $scope.toggle = function (section) {
+            // Reset all flags
+            $scope.showHome = false;
+            $scope.showCreate = false;
+            $scope.showRead = false;
+            $scope.showUpdate = false;
+            $scope.showDelete = false;
 
-        // Function to toggle the visibility of the "CREATE ENTRY" section
-        $scope.toggleCreateEntry = function() {
-            $scope.showCreateEntry = !$scope.showCreateEntry;
-        };
-    });
-
-    adminPanelApp.controller('ReadController', function ($scope) {
-        // Controller logic for read
-        $scope.showReadEntry = false; // Initially set to false to hide the "READ ENTRIES" section
-
-        // Function to toggle the visibility of the "READ ENTRIES" section
-        $scope.toggleReadEntry = function() {
-            $scope.showReadEntry = !$scope.showReadEntry;
-        };
-    });
-
-    adminPanelApp.controller('UpdateController', function ($scope) {
-        // Controller logic for update
-        $scope.showUpdateEntry = false; // Initially set to false to hide the "UPDATE ENTRIES" section
-
-        // Function to toggle the visibility of the "UPDATE ENTRIES" section
-        $scope.toggleUpdateEntry = function() {
-            $scope.showUpdateEntry = !$scope.showUpdateEntry;
-        };
-    });
-
-    adminPanelApp.controller('DeleteController', function ($scope) {
-        // Controller logic for delete
-        $scope.showDeleteEntry = false; // Initially set to false to hide the "DELETE ENTRIES" section
-
-        // Function to toggle the visibility of the "DELETE ENTRIES" section
-        $scope.toggleDeleteEntry = function() {
-            $scope.showDeleteEntry = !$scope.showDeleteEntry;
+            // Set the flag for the selected section
+             if (section === 'home') {
+                $scope.showHome = true;
+            } else if (section === 'create') {
+                $scope.showCreate = true;
+            } else if (section === 'read') {
+                $scope.showRead = true;
+            } else if (section === 'update') {
+                $scope.showUpdate = true;
+            } else if (section === 'delete') {
+                $scope.showDelete = true;
+            }
         };
     });
 </script>
-
-<!-- Define your templates here -->
-<script type="text/ng-template" id="create.html">
-    <h3>CREATE ENTRY</h3>
-    <button ng-click="toggleCreateEntry()" class="btn btn-info">Toggle Entry</button>
-    <div ng-show="showCreateEntry">
-        <!-- Add your create content here -->
-        <p>This is the content for creating an entry.</p>
-    </div>
-</script>
-
-<script type="text/ng-template" id="read.html">
-    <h3>READ ENTRIES</h3>
-    <button ng-click="toggleReadEntry()" class="btn btn-info">Toggle Entry</button>
-    <div ng-show="showReadEntry">
-        <!-- Add your read content here -->
-        <p>This is the content for reading entries.</p>
-    </div>
-</script>
-
-<script type="text/ng-template" id="update.html">
-    <h3>UPDATE ENTRIES</h3>
-    <button ng-click="toggleUpdateEntry()" class="btn btn-info">Toggle Entry</button>
-    <div ng-show="showUpdateEntry">
-        <!-- Add your update content here -->
-        <p>This is the content for updating entries.</p>
-    </div>
-</script>
-
-<script type="text/ng-template" id="delete.html">
-    <h3>DELETE ENTRIES</h3>
-    <button ng-click="toggleDeleteEntry()" class="btn btn-info">Toggle Entry</button>
-    <div ng-show="showDeleteEntry">
-        <!-- Add your delete content here -->
-        <p>This is the content for deleting entries.</p>
-    </div>
-</script>
-
 </body>
 </html>
