@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.min.js"></script>
+    <style>
+        /* Add your custom styles here */
+        body {
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding-top: 50px;
+            text-align: center;
+        }
+        .hero-section {
+            background-color: #337ab7;
+            color: #fff;
+            padding: 30px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+        }
+        .hero-section h2 {
+            margin-bottom: 20px;
+        }
+        .btn-group {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="hero-section">
+        <h2>Welcome to Admin Panel!</h2>
+    </div>
+
+    <div class="btn-group">
+        <a href="#/index" class="btn btn-default">HOME</a>
+        <a href="#/create" class="btn btn-primary">CREATE</a>
+        <a href="#/read" class="btn btn-success">READ</a>
+        <a href="#/update" class="btn btn-warning">UPDATE</a>
+        <a href="#/delete" class="btn btn-info">DELETE</a>
+    </div>
+
+    <div ng-view></div>
+</div>
+
+<script>
+    var adminPanelApp = angular.module('adminPanelApp', ['ngRoute']);
+
+    adminPanelApp.config(function ($routeProvider) {
+        $routeProvider
+            .when('/index', {
+                templateUrl: 'index.html'
+            })
+            .when('/create', {
+                templateUrl: 'create.html',
+                controller: 'CreateController'
+            })
+            .when('/read', {
+                templateUrl: 'read.html',
+                controller: 'ReadController'
+            })
+            .when('/update', {
+                templateUrl: 'update.html',
+                controller: 'UpdateController'
+            })
+            .when('/delete', {
+                templateUrl: 'delete.html',
+                controller: 'DeleteController'
+            })
+            .otherwise({
+                redirectTo: '/index' // Redirect to the default route '/index'
+            });
+    });
+
+    adminPanelApp.controller('CreateController', function ($scope) {
+        // Controller logic for create
+        $scope.showCreateEntry = false; // Initially set to false to hide the "CREATE ENTRY" section
+
+        // Function to toggle the visibility of the "CREATE ENTRY" section
+        $scope.toggleCreateEntry = function() {
+            $scope.showCreateEntry = !$scope.showCreateEntry;
+        };
+    });
+
+    adminPanelApp.controller('ReadController', function ($scope) {
+        // Controller logic for read
+        $scope.showReadEntry = false; // Initially set to false to hide the "READ ENTRIES" section
+
+        // Function to toggle the visibility of the "READ ENTRIES" section
+        $scope.toggleReadEntry = function() {
+            $scope.showReadEntry = !$scope.showReadEntry;
+        };
+    });
+
+    adminPanelApp.controller('UpdateController', function ($scope) {
+        // Controller logic for update
+        $scope.showUpdateEntry = false; // Initially set to false to hide the "UPDATE ENTRIES" section
+
+        // Function to toggle the visibility of the "UPDATE ENTRIES" section
+        $scope.toggleUpdateEntry = function() {
+            $scope.showUpdateEntry = !$scope.showUpdateEntry;
+        };
+    });
+
+    adminPanelApp.controller('DeleteController', function ($scope) {
+        // Controller logic for delete
+        $scope.showDeleteEntry = false; // Initially set to false to hide the "DELETE ENTRIES" section
+
+        // Function to toggle the visibility of the "DELETE ENTRIES" section
+        $scope.toggleDeleteEntry = function() {
+            $scope.showDeleteEntry = !$scope.showDeleteEntry;
+        };
+    });
+</script>
+
+<!-- Define your templates here -->
+<script type="text/ng-template" id="create.html">
+    <h3>CREATE ENTRY</h3>
+    <button ng-click="toggleCreateEntry()" class="btn btn-info">Toggle Entry</button>
+    <div ng-show="showCreateEntry">
+        <!-- Add your create content here -->
+        <p>This is the content for creating an entry.</p>
+    </div>
+</script>
+
+<script type="text/ng-template" id="read.html">
+    <h3>READ ENTRIES</h3>
+    <button ng-click="toggleReadEntry()" class="btn btn-info">Toggle Entry</button>
+    <div ng-show="showReadEntry">
+        <!-- Add your read content here -->
+        <p>This is the content for reading entries.</p>
+    </div>
+</script>
+
+<script type="text/ng-template" id="update.html">
+    <h3>UPDATE ENTRIES</h3>
+    <button ng-click="toggleUpdateEntry()" class="btn btn-info">Toggle Entry</button>
+    <div ng-show="showUpdateEntry">
+        <!-- Add your update content here -->
+        <p>This is the content for updating entries.</p>
+    </div>
+</script>
+
+<script type="text/ng-template" id="delete.html">
+    <h3>DELETE ENTRIES</h3>
+    <button ng-click="toggleDeleteEntry()" class="btn btn-info">Toggle Entry</button>
+    <div ng-show="showDeleteEntry">
+        <!-- Add your delete content here -->
+        <p>This is the content for deleting entries.</p>
+    </div>
+</script>
+
+</body>
+</html>
