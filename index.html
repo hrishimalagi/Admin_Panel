@@ -1,9 +1,11 @@
+<!-- index.html (Frontend HTML) -->
+
 <!DOCTYPE html>
 <html lang="en" ng-app="vehicleTrackingApp">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADMIN PANEL </title>
+    <title>ADMIN PANEL</title>
     <!-- Include Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <style>
@@ -62,7 +64,6 @@
             <li><a ng-click="toggle('update')">UPDATE</a></li>
             <li><a ng-click="toggle('delete')">DELETE</a></li>
         </ul>
-
     </div>
 </nav>
 
@@ -73,29 +74,51 @@
 </div>
 
 <!-- Other tabs for different features -->
-<div class="container tab-content" ng-show="showHome">
-    <!-- Content will be shown when the "HOME" tab is active -->
-    <!-- Add content for home tab here -->
+<div class="container tab-content" ng-show="showRead">
+    <h3>Read</h3>
+    <ul class="list-group">
+        <li class="list-group-item" ng-repeat="name in names">
+            {{ name }}
+        </li>
+    </ul>
 </div>
 
 <div class="container tab-content" ng-show="showCreate">
     <h3>Create</h3>
-    <!-- Add content for create tab here -->
-</div>
-
-<div class="container tab-content" ng-show="showRead">
-    <h3>Read</h3>
-    <!-- Add content for read tab here -->
+    <form>
+        <div class="form-group">
+            <label for="newName">Name:</label>
+            <input type="text" class="form-control" id="newName" ng-model="newName">
+        </div>
+        <button type="button" class="btn btn-primary" ng-click="createName()">Create</button>
+    </form>
 </div>
 
 <div class="container tab-content" ng-show="showUpdate">
     <h3>Update</h3>
-    <!-- Add content for update tab here -->
+    <form>
+        <div class="form-group">
+            <label for="existingName">Select Name to Update:</label>
+            <select class="form-control" id="existingName" ng-model="selectedName">
+                <option ng-repeat="name in names" value="{{name}}">{{name}}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="updatedName">Updated Name:</label>
+            <input type="text" class="form-control" id="updatedName" ng-model="updatedName">
+        </div>
+        <button type="button" class="btn btn-primary" ng-click="updateName()">Update</button>
+    </form>
 </div>
 
 <div class="container tab-content" ng-show="showDelete">
     <h3>Delete</h3>
-    <!-- Add content for delete tab here -->
+    <ul class="list-group">
+        <li class="list-group-item" ng-repeat="name in names">
+            {{ name }}
+            <button type="button" class="btn btn-danger btn-xs" ng-click="deleteName(name)">Delete</button>
+        </li>
+    </ul>
 </div>
 
 <!-- Include AngularJS -->
@@ -104,14 +127,14 @@
 <script>
     var vehicleTrackingApp = angular.module('vehicleTrackingApp', []);
 
-    vehicleTrackingApp.controller('MainController', function ($scope) {
+    vehicleTrackingApp.controller('MainController', function ($scope, $http) {
         // Flags for controlling visibility of components
-        $scope.showLogin = false;
-        $scope.showHome = false; // Initially set to false to hide the "HOME" section
+        $scope.showHome = false;
         $scope.showCreate = false;
         $scope.showRead = false;
         $scope.showUpdate = false;
         $scope.showDelete = false;
+        $scope.names = []; // Initialize the names array
 
         // Function to toggle component visibility
         $scope.toggle = function (section) {
@@ -123,17 +146,64 @@
             $scope.showDelete = false;
 
             // Set the flag for the selected section
-             if (section === 'home') {
+            if (section === 'home') {
                 $scope.showHome = true;
             } else if (section === 'create') {
                 $scope.showCreate = true;
             } else if (section === 'read') {
                 $scope.showRead = true;
+                $scope.readNames(); // Load names when switching to the Read tab
             } else if (section === 'update') {
                 $scope.showUpdate = true;
             } else if (section === 'delete') {
                 $scope.showDelete = true;
             }
+        };
+
+        // Function to read names
+        $scope.readNames = function () {
+            $http.get('/api/names') // Updated URL
+                .then(function (response) {
+                    $scope.names = response.data;
+                })
+                .catch(function (error) {
+                    console.error('Error reading names:', error);
+                });
+        };
+
+        // Function to create a new name
+        $scope.createName = function () {
+            $http.post('/api/names/add', { name: $scope.newName }) // Updated URL
+                .then(function (response) {
+                    $scope.readNames(); // Refresh the list after creation
+                    $scope.newName = ''; // Clear the input field
+                })
+                .catch(function (error) {
+                    console.error('Error creating name:', error);
+                });
+        };
+
+        // Function to update a name
+        $scope.updateName = function () {
+            $http.put('/api/names/update/' + $scope.selectedName, { newName: $scope.updatedName }) // Updated URL
+                .then(function (response) {
+                    $scope.readNames(); // Refresh the list after update
+                    $scope.updatedName = ''; // Clear the input field
+                })
+                .catch(function (error) {
+                    console.error('Error updating name:', error);
+                });
+        };
+
+        // Function to delete a name
+        $scope.deleteName = function (name) {
+            $http.delete('/api/names/delete/' + name) // Updated URL
+                .then(function (response) {
+                    $scope.readNames(); // Refresh the list after deletion
+                })
+                .catch(function (error) {
+                    console.error('Error deleting name:', error);
+                });
         };
     });
 </script>
